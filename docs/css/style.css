@@ -1,0 +1,17 @@
+.tree__list {
+  display: none;
+}
+.tree__list--open {
+  display: block;
+}
+.tree-navigation {
+  display: none;
+  top: 10px;
+  right: 20px;
+  position: fixed;
+}
+.tree-navigation--visible {
+  display: block;
+}
+
+/*# sourceMappingURL=style.css.map */
