@@ -1,45 +1,38 @@
 'use strict'
 
 const MAX_Y_OFFSET = 500;
-const Tags = {
-  a: `A`,
-  h2: `H2`
-};
-const treeBlockList = document.querySelectorAll(`.tree__block`);
+const TAG_H2 = `H2`;
+
+const treeHeadLinkList = document.querySelectorAll(`.tree__link-accordion`);
 const treeNav = document.querySelector(`.tree-navigation`);
-
-
 
 /**
  * переключает класс для переданного селектора
  * @param {Object} container - селектор, у которого переключается класс
  * @return {Object} - функция, переключающая класс
  */
-const treeHeadHandler = function (container) {
+const treeHeadTitleHandler = function (container) {
   return function (evt) {
     evt.preventDefault();
-    try {
-      if (Object.values(Tags).includes(evt.target.tagName)) {
-        const tree = container.querySelector(`.tree__list`);
-        tree.classList.toggle(`tree__list--open`);
-      }
-    } catch { }
+    if (evt.target.parentNode.tagName === TAG_H2) {
+      const treeHead = container.closest(`.tree__block`).querySelector(`.tree__list`);
+      treeHead.classList.toggle(`tree__list--open`);
+    }
   };
 };
 
 /**
  * переключает класс для меню дополнительной навигации
  */
-const treeNavigationHandler = function() {
+const treeNavigationHandler = function () {
   if (pageYOffset > MAX_Y_OFFSET) {
-    console.log(pageYOffset);
     treeNav.classList.add(`tree-navigation--visible`);
   } else {
     treeNav.classList.remove(`tree-navigation--visible`);
   }
 }
 
-for (const treeBlock of treeBlockList) {
-  treeBlock.addEventListener(`click`, treeHeadHandler(treeBlock));
+for (const headLink of treeHeadLinkList) {
+  headLink.addEventListener(`click`, treeHeadTitleHandler(headLink));
 }
 window.addEventListener(`scroll`, treeNavigationHandler);

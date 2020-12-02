@@ -6,10 +6,14 @@ const postcss = require("gulp-postcss");
 const autoprefixer = require("autoprefixer");
 const sync = require("browser-sync").create();
 
+const clean = () => {
+  return del("build");
+}
+
 // Styles
 
 const styles = () => {
-  return gulp.src("source/less/style.less")
+  return gulp.src("docs/less/style.less")
     .pipe(plumber())
     .pipe(sourcemap.init())
     .pipe(less())
@@ -17,7 +21,7 @@ const styles = () => {
       autoprefixer()
     ]))
     .pipe(sourcemap.write("."))
-    .pipe(gulp.dest("source/css"))
+    .pipe(gulp.dest("docs/css"))
     .pipe(sync.stream());
 }
 
@@ -28,7 +32,7 @@ exports.styles = styles;
 const server = (done) => {
   sync.init({
     server: {
-      baseDir: 'source'
+      baseDir: 'docs'
     },
     cors: true,
     notify: false,
@@ -42,10 +46,19 @@ exports.server = server;
 // Watcher
 
 const watcher = () => {
-  gulp.watch("source/less/**/*.less", gulp.series("styles"));
-  gulp.watch("source/*.html").on("change", sync.reload);
+  gulp.watch("docs/less/**/*.less", gulp.series("styles"));
+  gulp.watch("docs/*.html").on("change", sync.reload);
 }
 
 exports.default = gulp.series(
   styles, server, watcher
 );
+
+
+const build = (done) => {
+  gulp.series(
+    clean
+  )(done);
+};
+
+exports.build = build;
